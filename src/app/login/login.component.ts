@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+
 
 @Component({
   selector: 'app-login',
@@ -10,16 +10,16 @@ import { Router } from '@angular/router';
 })
 
 export class LoginComponent {
-  fb = inject(FormBuilder);
-  http = inject(HttpClient);
-  router = inject(Router);
-  
-  form = this.fb.nonNullable.group({
-    email: ['', Validators.required],
-    password: ['', Validators.required],
-  })
+  email: string = '';
+  password: string = '';
 
-  onSubmit(): void {
-    console.log('login');
+  constructor(private authService: AuthService) {}
+
+  onLogin() {
+    this.authService.login(this.email, this.password).then((result) => {
+      console.log('Login erfolgreich:', result);
+    }).catch((error) => {
+      console.error('Login fehlgeschlagen:', error);
+    });
   }
 }
